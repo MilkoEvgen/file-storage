@@ -19,7 +19,8 @@
 **Технологии**: Java, MySQL, Hibernate, HTTP, Servlets, Flyway, Maven, Swagger
 ___
 ### Инструкция по запуску проекта:
-1. Установить Java и Maven
+1. Установить Java, Maven и Tomcat
 2. Склонировать проект себе на компьютер `git clone https://github.com/MilkoEvgen/file-storage.git`
 3. Перейти в папку проекта и выполнить команду `mvn clean install`
-4. Перейти в папку target и выполнить команду `java -jar FileStorage-1.0-SNAPSHOT.jar`
+4. Скопировать WAR-файл в Tomcat `cp FileStorage-1.0-SNAPSHOT.war $CATALINA_HOME/webapps/`
+5. Запустить Tomcat `$CATALINA_HOME/bin/startup.sh`
