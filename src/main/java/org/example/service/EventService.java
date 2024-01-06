@@ -1,11 +1,10 @@
 package org.example.service;
 
-import org.example.model.Event;
-import org.example.model.File;
+import org.example.dto.EventDto;
+
+import java.util.List;
 
 public interface EventService {
-    Event create(Event event);
-    Event getById(Integer id);
-    Event update(Event event);
-    boolean delete(Integer id);
+    EventDto getById(Integer id);
+    List<EventDto> getAll();
 }

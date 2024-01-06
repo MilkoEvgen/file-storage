@@ -7,6 +7,8 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import java.util.List;
+
 public class UserRepositoryImpl implements UserRepository {
     @Override
     public User create(User user) {
@@ -26,12 +28,24 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User getById(Integer integer) {
+    public User getById(Integer id) {
         User user;
         try (Session session = HibernateUtil.getSession()) {
-            user = session.get(User.class, integer);
+            Query<User> query = session.createQuery("FROM User u LEFT JOIN FETCH u.events WHERE u.id = :id", User.class);
+            query.setParameter("id", id);
+            user = query.getSingleResult();
         }
         return user;
+    }
+
+    @Override
+    public List<User> getAll() {
+        List<User> users;
+        try (Session session = HibernateUtil.getSession()) {
+            Query<User> query = session.createQuery("FROM User u LEFT JOIN FETCH u.events", User.class);
+            users = query.getResultList();
+        }
+        return users;
     }
 
     @Override
@@ -41,6 +55,9 @@ public class UserRepositoryImpl implements UserRepository {
             transaction = session.getTransaction();
             transaction.begin();
             session.merge(user);
+            Query<User> query = session.createQuery("FROM User u LEFT JOIN FETCH u.events WHERE u.id = :id", User.class);
+            query.setParameter("id", user.getId());
+            user = query.getSingleResult();
             transaction.commit();
         } catch (Exception e){
             if (transaction != null && transaction.isActive()){

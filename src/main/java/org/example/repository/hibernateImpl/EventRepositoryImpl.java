@@ -9,6 +9,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EventRepositoryImpl implements EventRepository {
@@ -46,6 +47,15 @@ public class EventRepositoryImpl implements EventRepository {
         return event;
     }
 
+    @Override
+    public List<Event> getAll() {
+        List<Event> events;
+        try (Session session = HibernateUtil.getSession()) {
+            Query<Event> query = session.createQuery("FROM Event", Event.class);
+            events = query.getResultList();
+        }
+        return events;
+    }
 
     @Override
     public Event update(Event event) {

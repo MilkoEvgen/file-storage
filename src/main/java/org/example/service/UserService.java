@@ -1,11 +1,13 @@
 package org.example.service;
 
-import org.example.model.User;
-import org.example.model.UserDto;
+import org.example.dto.UserDto;
+
+import java.util.List;
 
 public interface UserService {
-    UserDto create(User user);
+    UserDto create(UserDto userDto);
     UserDto getById(Integer id);
-    UserDto update(User user);
+    List<UserDto> getAll();
+    UserDto update(UserDto userDto);
     boolean delete(Integer id);
 }

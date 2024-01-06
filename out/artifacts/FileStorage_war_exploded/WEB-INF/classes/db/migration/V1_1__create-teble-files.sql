@@ -1,5 +1,0 @@
-CREATE TABLE files (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(128) NOT NULL,
-    file_path VARCHAR(512) NOT NULL
-);

@@ -1,53 +1,63 @@
 package org.example.service.impl;
 
-import org.example.model.Event;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.example.dto.UserDto;
+import org.example.exceptions.EntityNotFoundException;
+import org.example.mapper.UserMapper;
 import org.example.model.User;
-import org.example.model.UserDto;
-import org.example.repository.EventRepository;
 import org.example.repository.UserRepository;
-import org.example.repository.hibernateImpl.EventRepositoryImpl;
-import org.example.repository.hibernateImpl.UserRepositoryImpl;
 import org.example.service.UserService;
 
 import java.util.List;
 
+@Slf4j
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final UserRepository userRepository = new UserRepositoryImpl();
-    private final EventRepository eventRepository = new EventRepositoryImpl();
+    private final UserRepository userRepository;
 
     @Override
-    public UserDto create(User user) {
-        User newUser = userRepository.create(user);
-        return UserDto.builder()
-                .id(newUser.getId())
-                .name(newUser.getName())
-                .build();
+    public UserDto create(UserDto userDto) {
+        log.info("in create, user - " + userDto);
+        User user = userRepository.create(UserMapper.toUser(userDto));
+        return UserMapper.toUserDto(user);
     }
 
     @Override
     public UserDto getById(Integer id) {
-        List<Event> events = eventRepository.getEventsByUserId(id);
-        User newUser = userRepository.getById(id);
-        return UserDto.builder()
-                .id(newUser.getId())
-                .name(newUser.getName())
-                .events(events)
-                .build();
+        log.info("in getById, id - " + id);
+        if (id == null) {
+            throw new IllegalArgumentException("ID cannot be null");
+        }
+        User user = userRepository.getById(id);
+        if (user == null){
+            throw new EntityNotFoundException("User not exists");
+        }
+        return UserMapper.toUserDto(user);
     }
 
     @Override
-    public UserDto update(User user) {
-        List<Event> events = eventRepository.getEventsByUserId(user.getId());
-        User newUser = userRepository.update(user);
-        return UserDto.builder()
-                .id(newUser.getId())
-                .name(newUser.getName())
-                .events(events)
-                .build();
+    public List<UserDto> getAll() {
+        log.info("in getAll");
+        return UserMapper.toUserDtoList(userRepository.getAll());
+    }
+
+    @Override
+    public UserDto update(UserDto userDto) {
+        log.info("in update, user - " + userDto);
+        if (userDto.getId() == null) {
+            throw new IllegalArgumentException("ID cannot be null");
+        }
+        User user = userRepository.update(UserMapper.toUser(userDto));
+        return UserMapper.toUserDto(user);
     }
 
     @Override
     public boolean delete(Integer id) {
+        log.info("in delete, id - " + id);
+        if (id == null) {
+            throw new IllegalArgumentException("ID cannot be null");
+        }
         return userRepository.delete(id);
     }
 }

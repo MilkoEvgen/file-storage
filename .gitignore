@@ -4,6 +4,7 @@
 Thumbs.db
 target/
 .idea/
+out/
 /.m2/
 /lib/
 *.log
